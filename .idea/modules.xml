@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BaseCommonAdapter.iml" filepath="$PROJECT_DIR$/BaseCommonAdapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/basecommomadapter/basecommomadapter.iml" filepath="$PROJECT_DIR$/basecommomadapter/basecommomadapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/basecommomadapter-annotations/basecommomadapter-annotations.iml" filepath="$PROJECT_DIR$/basecommomadapter-annotations/basecommomadapter-annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/basecommonadapter-compiler/basecommonadapter-compiler.iml" filepath="$PROJECT_DIR$/basecommonadapter-compiler/basecommonadapter-compiler.iml" />
+    </modules>
+  </component>
+</project>
