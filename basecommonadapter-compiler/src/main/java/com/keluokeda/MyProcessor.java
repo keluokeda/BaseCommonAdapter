@@ -182,7 +182,8 @@ public class MyProcessor extends AbstractProcessor {
 
 
         } catch (Exception e) {
-            error(e.getMessage());
+            e.printStackTrace();
+            error("adapter processor has error %s",e);
         }
 
 
