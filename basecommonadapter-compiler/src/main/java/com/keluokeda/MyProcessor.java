@@ -204,7 +204,7 @@ public class MyProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
 
-        Set<String> strings = new LinkedHashSet<>(1);
+        Set<String> strings = new LinkedHashSet<>(2);
         strings.add(Bind.class.getCanonicalName());
         strings.add(Item.class.getCanonicalName());
         return strings;
