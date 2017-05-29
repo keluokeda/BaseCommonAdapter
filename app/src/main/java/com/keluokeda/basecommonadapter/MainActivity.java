@@ -33,12 +33,6 @@ public class MainActivity extends AppCompatActivity {
         BaseCommonAdapter<User> baseCommonAdapter = AdapterFactory.createAdapter(User.class, users);
         listView.setAdapter(baseCommonAdapter);
 
-        ArrayAdapter<User> arrayAdapter = null;
-        arrayAdapter.add(null);
-        arrayAdapter.remove(null);
-        arrayAdapter.clear();
-        arrayAdapter.insert(null,1);
-        arrayAdapter.getPosition(null);
-        arrayAdapter.sort(null);
+
     }
 }
