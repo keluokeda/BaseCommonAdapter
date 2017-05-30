@@ -13,8 +13,8 @@
 
 - 在app 的gradle文件中添加
 ```
-    compile 'com.github.keluokeda.BaseCommonAdapter:basecommomadapter:1.0.4'
-    annotationProcessor 'com.github.keluokeda.BaseCommonAdapter:basecommonadapter-compiler:1.0.4'
+    compile 'com.github.keluokeda.BaseCommonAdapter:basecommomadapter:1.0.5'
+    annotationProcessor 'com.github.keluokeda.BaseCommonAdapter:basecommonadapter-compiler:1.0.5'
 ```
 
 ## 怎么使用？
