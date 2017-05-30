@@ -25,12 +25,16 @@ public class User {
     private String name;
     private String sign;
 
+    public User() {
+    }
+
     public User(String name, String sign) {
         this.name = name;
         this.sign = sign;
     }
 
-    @Bind(targetId = R.id.tv_name, binderClassName = "com.keluokeda.basecommomadapter.TextViewValueBinder", viewClassName = "android.widget.TextView")
+
+    @Bind(viewId = R.id.tv_name, binderClass = TextViewValueBinder.class,viewClass = TextView.class)
     public String getName() {
         return name;
     }
@@ -39,7 +43,7 @@ public class User {
         this.name = name;
     }
 
-    @Bind(targetId = R.id.tv_sign, binderClassName = "com.keluokeda.basecommomadapter.TextViewValueBinder", viewClassName = "android.widget.TextView")
+    @Bind(viewId = R.id.tv_sign,binderClass = TextViewValueBinder.class,viewClass = TextView.class)
     public String getSign() {
         return sign;
     }
@@ -51,7 +55,7 @@ public class User {
 ```
 用 注解 @Item 表示这是一个 和ListView 相关联的实体类，resource 用来指定 ListView的item布局
 
-@Bind 注解表示这个方法的返回值会被注入item 里面的一个view上，targetId表示要绑定的view的id，binderClassName 指定 数据绑定器的类全名，viewClassName 指定 view 的类全名
+@Bind 注解表示这个方法的返回值会被注入item 里面的一个view上，viewId表示要绑定的view的id，binderClass 指定 数据绑定器的类，viewClass 指定 view 的类
 
 #### 数据绑定器要实现ValueBinder 接口，实现类要包含一个无参的构造方法
 ```java
