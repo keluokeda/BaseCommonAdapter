@@ -32,6 +32,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void grid(View view){
-
+        startActivity(new Intent(this,GridActivity.class));
     }
 }
