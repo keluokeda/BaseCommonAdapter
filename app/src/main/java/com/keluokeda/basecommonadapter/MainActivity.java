@@ -1,5 +1,6 @@
 package com.keluokeda.basecommonadapter;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,30 +22,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView = (ListView) findViewById(R.id.lv_user);
-        final TextView textView = (TextView) findViewById(R.id.tv_content);
 
 
-        List<User> users = new ArrayList<>(20);
-        for (int i = 0; i < 20; i++) {
-            String name = String.valueOf(i);
-            String sign = UUID.randomUUID().toString();
-            User user = new User(name, sign);
-            users.add(user);
-        }
 
+    }
 
-        BaseCommonAdapter<User> baseCommonAdapter = AdapterFactory.createAdapter(User.class, users);
-        baseCommonAdapter.setOnChildViewClickListener(new OnChildViewClickListener<User>() {
-            @Override
-            public void onChildViewClick(int position, User user, View view) {
-                TextView textView1 = (TextView) view;
+    public void list(View view){
+        startActivity(new Intent(this,ListActivity.class));
+    }
 
-                String info = String.format("position = %d , user = %s , view = %s",position,user.toString(),textView1.getText().toString());
-                textView.setText(info);
-            }
-        });
-        listView.setAdapter(baseCommonAdapter);
+    public void grid(View view){
 
     }
 }

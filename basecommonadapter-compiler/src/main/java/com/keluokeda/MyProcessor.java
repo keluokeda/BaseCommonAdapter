@@ -60,56 +60,32 @@ public class MyProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        //执行此方法时，会把一个类 中所有元素的注解给抽取出来（包括类注解，方法注解，变量注解)
+        //执行此方法的时候会把所有 含有目标注解的 元素 装在 roundEnvironment
         try {
 
             Set<? extends Element> methodSets = roundEnvironment.getElementsAnnotatedWith(Bind.class);
 
 
-            //class set 个数永远是1
             Set<? extends Element> clazzSets = roundEnvironment.getElementsAnnotatedWith(Item.class);
 
-            if (clazzSets.size() != 1) {
-                return true;
-            }
 
-            if (methodSets.isEmpty()) {
-                error("bean class with %s should has %s method", Item.class.getSimpleName(), Bind.class.getSimpleName());
-                return true;
-            }
-
-            String packageName = null;
-            String itemClassSimpleName = null;
-            ClassName itemClassName = null;
-            int layoutId = 0;
             for (Element element : clazzSets) {
-                packageName = mElements.getPackageOf(element).getQualifiedName().toString();
-                itemClassSimpleName = element.getSimpleName().toString();
-                itemClassName = ClassName.get((TypeElement) element);
+
+
+                String packageName = mElements.getPackageOf(element).getQualifiedName().toString();
+                String itemClassSimpleName = element.getSimpleName().toString();
+                ClassName itemClassName = ClassName.get((TypeElement) element);
                 Item item = element.getAnnotation(Item.class);
-                layoutId = item.resource();
+                int layoutId = item.resource();
 
-//                for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-//                    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
-//                            annotationMirror.getElementValues().entrySet()) {
-//                        if ("clazz".equals(entry.getKey().getSimpleName().toString())) {
-//                            AnnotationValue value = entry.getValue();
-//                            typeMirror = (TypeMirror) value.getValue();
-//                            break;
-//                        }
-//
-//                    }
-//                }
+                String viewHolderClassName = itemClassSimpleName + "_" + VIEW_HOLDER;
 
+
+                createViewHolderClass(methodSets, packageName, itemClassSimpleName, itemClassName, element);
+
+
+                createAdapterClass(packageName, itemClassSimpleName, itemClassName, layoutId, viewHolderClassName);
             }
-
-            String viewHolderClassName = itemClassSimpleName + "_" + VIEW_HOLDER;
-
-
-            createViewHolderClass(methodSets, packageName, itemClassSimpleName, itemClassName);
-
-
-            createAdapterClass(packageName, itemClassSimpleName, itemClassName, layoutId, viewHolderClassName);
 
 
         } catch (Exception e) {
@@ -151,8 +127,18 @@ public class MyProcessor extends AbstractProcessor {
         JavaFile.builder(packageName, adapterTypeSpec).build().writeTo(mFiler);
     }
 
-    private void createViewHolderClass(Set<? extends Element> methodSets, String packageName, String itemClassSimpleName, ClassName itemClassName) throws IOException {
+    private void createViewHolderClass(Set<? extends Element> methodSets, String packageName, String itemClassSimpleName, ClassName itemClassName, Element itemClassElement) throws IOException {
+        Set<Element> elementSet = new LinkedHashSet<>();
+        for (Element element : methodSets) {
+            TypeElement typeElement = (TypeElement) element.getEnclosingElement();
+            if (typeElement == itemClassElement) {
+                elementSet.add(element);
+            }
+        }
 
+        if (elementSet.isEmpty()) {
+            return;
+        }
 
         FieldSpec itemFieldSpec = FieldSpec.builder(itemClassName, itemClassSimpleName.toLowerCase())
                 .addModifiers(Modifier.PRIVATE).build();
@@ -188,7 +174,7 @@ public class MyProcessor extends AbstractProcessor {
                 .addSuperinterface(ParameterizedTypeName.get(CLASSNAME_VIEWHOLDER, itemClassName));
 
         //循环遍历 每个带有注解的方法
-        for (Element element : methodSets) {
+        for (Element element : elementSet) {
 
 
             ExecutableElement executableElement = (ExecutableElement) element;
@@ -221,7 +207,6 @@ public class MyProcessor extends AbstractProcessor {
             }
 
 
-
             int id = bind.viewId();
             String viewFieldName = itemMethodName + "_" + viewClassName.simpleName();
 
@@ -234,8 +219,8 @@ public class MyProcessor extends AbstractProcessor {
                     .addStatement("this.$L = new $T()", binderFieldName, binderClassName);
 
             //设置 click 监听器
-            if (bind.click()){
-                constructorBuilder.addStatement("this.$L.setOnClickListener(this)",viewFieldName);
+            if (bind.click()) {
+                constructorBuilder.addStatement("this.$L.setOnClickListener(this)", viewFieldName);
             }
 
 

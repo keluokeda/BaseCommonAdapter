@@ -17,6 +17,7 @@ public class AdapterFactory {
     public static <T> BaseCommonAdapter<T> createAdapter(Class<T> itemClass, List<T> items) {
         BaseCommonAdapter<T> baseCommonAdapter = null;
         try {
+
             String fullName = itemClass.getName();
             Class clazz = sMap.get(fullName);
             if (clazz == null) {

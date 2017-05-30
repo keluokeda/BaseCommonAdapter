@@ -8,16 +8,18 @@
     android:orientation="vertical"
     tools:context="com.keluokeda.basecommonadapter.MainActivity">
 
-    <TextView
-        android:id="@+id/tv_content"
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
+        android:onClick="list"
+        android:text="list"
         />
 
-    <ListView
-        android:id="@+id/lv_user"
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:onClick="grid"
+        android:text="grid"
+        />
 
 </LinearLayout>
