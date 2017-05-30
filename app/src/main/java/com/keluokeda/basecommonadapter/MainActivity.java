@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
             users.add(user);
         }
 
+
         BaseCommonAdapter<User> baseCommonAdapter = AdapterFactory.createAdapter(User.class, users);
         listView.setAdapter(baseCommonAdapter);
 
