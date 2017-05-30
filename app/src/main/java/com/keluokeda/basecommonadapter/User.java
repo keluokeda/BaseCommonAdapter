@@ -1,8 +1,11 @@
 package com.keluokeda.basecommonadapter;
 
 
+import android.widget.TextView;
+
 import com.keluokeda.Bind;
 import com.keluokeda.Item;
+import com.keluokeda.basecommomadapter.TextViewValueBinder;
 
 @Item(resource = R.layout.item_user)
 public class User {
@@ -18,7 +21,7 @@ public class User {
     }
 
 
-    @Bind(targetId = R.id.tv_name, binderClassName = "com.keluokeda.basecommomadapter.TextViewValueBinder", viewClassName = "android.widget.TextView")
+    @Bind(viewId = R.id.tv_name, binderClass = TextViewValueBinder.class,viewClass = TextView.class)
     public String getName() {
         return name;
     }
@@ -27,7 +30,7 @@ public class User {
         this.name = name;
     }
 
-    @Bind(targetId = R.id.tv_sign, binderClassName = "com.keluokeda.basecommomadapter.TextViewValueBinder", viewClassName = "android.widget.TextView")
+    @Bind(viewId = R.id.tv_sign,binderClass = TextViewValueBinder.class,viewClass = TextView.class)
     public String getSign() {
         return sign;
     }

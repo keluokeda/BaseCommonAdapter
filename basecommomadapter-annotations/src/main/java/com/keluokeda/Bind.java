@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Bind {
-    int targetId();
+    int viewId();
 
-    String binderClassName();
+    Class binderClass();
 
-    String viewClassName();
+    Class viewClass();
 }

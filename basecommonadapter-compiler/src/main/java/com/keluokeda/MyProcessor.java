@@ -12,6 +12,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -21,10 +22,13 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
@@ -39,6 +43,8 @@ public class MyProcessor extends AbstractProcessor {
     private static final ClassName CLASSNAME_BASECOMMONADAPTER = ClassName.get("com.keluokeda.basecommomadapter", "BaseCommonAdapter");
     private static final ClassName CLASSNAME_VIEW = ClassName.get("android.view", "View");
 
+    private static final String KEY_VIEWCLASS = "viewClass";
+    private static final String KEY_BINDER_CLASS = "binderClass";
     private Elements mElements;
     private Filer mFiler;
     private Messager messager;
@@ -81,6 +87,19 @@ public class MyProcessor extends AbstractProcessor {
                 itemClassName = ClassName.get((TypeElement) element);
                 Item item = element.getAnnotation(Item.class);
                 layoutId = item.resource();
+
+//                for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+//                    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
+//                            annotationMirror.getElementValues().entrySet()) {
+//                        if ("clazz".equals(entry.getKey().getSimpleName().toString())) {
+//                            AnnotationValue value = entry.getValue();
+//                            typeMirror = (TypeMirror) value.getValue();
+//                            break;
+//                        }
+//
+//                    }
+//                }
+
             }
 
 
@@ -110,12 +129,29 @@ public class MyProcessor extends AbstractProcessor {
 
 
                 Bind bind = element.getAnnotation(Bind.class);
+                ClassName viewClassName = null;
+                ClassName binderClassName = null;
 
-                ClassName viewClassName = ClassName.bestGuess(bind.viewClassName());
-                int id = bind.targetId();
+
+                for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+                    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
+                            annotationMirror.getElementValues().entrySet()) {
+                        if (KEY_VIEWCLASS.equals(entry.getKey().getSimpleName().toString())) {
+                            AnnotationValue value = entry.getValue();
+                            TypeMirror typeMirror = (TypeMirror) value.getValue();
+                            viewClassName = (ClassName) ClassName.get(typeMirror);
+                        } else if (KEY_BINDER_CLASS.equals(entry.getKey().getSimpleName().toString())) {
+                            AnnotationValue value = entry.getValue();
+                            TypeMirror typeMirror = (TypeMirror) value.getValue();
+                            binderClassName = (ClassName) ClassName.get(typeMirror);
+                        }
+
+                    }
+                }
+
+                int id = bind.viewId();
                 String viewFieldName = itemMethodName + "_" + viewClassName.simpleName();
 
-                ClassName binderClassName = ClassName.bestGuess(bind.binderClassName());
                 String binderFieldName = itemMethodName + "_" + binderClassName.simpleName();
                 FieldSpec binderFieldSpec = FieldSpec.builder(binderClassName, binderFieldName, Modifier.PRIVATE).build();
                 viewHolderBuilder.addField(binderFieldSpec);
@@ -183,12 +219,13 @@ public class MyProcessor extends AbstractProcessor {
 
         } catch (Exception e) {
             e.printStackTrace();
-            error("adapter processor has error %s",e);
+            error("adapter processor has error %s", e);
         }
 
 
         return true;
     }
+
 
     //给开发者提供错误信息
     private void error(String msg, Object... args) {
