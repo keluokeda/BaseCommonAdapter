@@ -1,6 +1,8 @@
 package com.keluokeda.basecommomadapter;
 
 
-public interface BaseViewHolder<T> {
-    void bindData(T t);
+import android.view.View;
+
+public interface BaseViewHolder<T> extends View.OnClickListener{
+    void bindData(T t,int position);
 }

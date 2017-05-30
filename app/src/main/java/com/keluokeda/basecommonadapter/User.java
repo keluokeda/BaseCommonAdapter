@@ -21,7 +21,7 @@ public class User {
     }
 
 
-    @Bind(viewId = R.id.tv_name, binderClass = TextViewValueBinder.class,viewClass = TextView.class)
+    @Bind(viewId = R.id.tv_name, binderClass = TextViewValueBinder.class,viewClass = TextView.class,click = true)
     public String getName() {
         return name;
     }

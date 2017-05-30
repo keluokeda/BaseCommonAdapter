@@ -10,8 +10,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class BaseCommonAdapter<T> extends BaseAdapter {
+public abstract class BaseCommonAdapter<T> extends BaseAdapter implements OnChildViewClickListener<T> {
     private List<T> mTList;
+    private OnChildViewClickListener<T> mOnChildViewClickListener;
 
 
     protected BaseCommonAdapter(List<T> list) {
@@ -44,7 +45,8 @@ public abstract class BaseCommonAdapter<T> extends BaseAdapter {
         } else {
             baseViewHolder = (BaseViewHolder<T>) convertView.getTag();
         }
-        baseViewHolder.bindData(getItem(position));
+
+        baseViewHolder.bindData(getItem(position), position);
         return convertView;
     }
 
@@ -84,5 +86,33 @@ public abstract class BaseCommonAdapter<T> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    private static boolean enabled = true;
 
+    private static final Runnable ENABLE_AGAIN = new Runnable() {
+        @Override
+        public void run() {
+            enabled = true;
+        }
+    };
+
+    @Override
+    public void onChildViewClick(int position, T t, View view) {
+        if (enabled) {
+            enabled = false;
+            view.post(ENABLE_AGAIN);
+            if (mOnChildViewClickListener != null) {
+                mOnChildViewClickListener.onChildViewClick(position, t, view);
+            }
+        }
+
+
+    }
+
+    public OnChildViewClickListener<T> getOnChildViewClickListener() {
+        return mOnChildViewClickListener;
+    }
+
+    public void setOnChildViewClickListener(OnChildViewClickListener<T> onChildViewClickListener) {
+        mOnChildViewClickListener = onChildViewClickListener;
+    }
 }

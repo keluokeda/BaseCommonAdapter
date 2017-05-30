@@ -14,4 +14,6 @@ public @interface Bind {
     Class binderClass();
 
     Class viewClass();
+
+    boolean click() default false;
 }
